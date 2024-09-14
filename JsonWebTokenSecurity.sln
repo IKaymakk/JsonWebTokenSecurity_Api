@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonWebTokenSecurity", "JsonWebTokenSecurity\JsonWebTokenSecurity.csproj", "{062DC914-1016-4A25-ADAB-0D59AB5FF97B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web_UI", "Web_UI\Web_UI.csproj", "{D014727A-E65C-416A-8A46-F4879711F00E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{062DC914-1016-4A25-ADAB-0D59AB5FF97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{062DC914-1016-4A25-ADAB-0D59AB5FF97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{062DC914-1016-4A25-ADAB-0D59AB5FF97B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D014727A-E65C-416A-8A46-F4879711F00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D014727A-E65C-416A-8A46-F4879711F00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D014727A-E65C-416A-8A46-F4879711F00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D014727A-E65C-416A-8A46-F4879711F00E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,53 +13,53 @@ namespace JsonWebTokenSecurity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KimlikDenetimiController : ControllerBase
+    public class Authorization : ControllerBase
     {
-        [HttpPost("Giris")]
-        public IActionResult Giris([FromBody] Entity apiKullanicisiBilgileri)
+        [HttpPost]
+        public IActionResult Login([FromBody] Entity entity)
         {
-            var apiKullanicisi = KimlikDenetimiYap(apiKullanicisiBilgileri);
-            if (apiKullanicisi == null) return NotFound("Kullanıcı Bulunamadı");
+            var user = CheckUser(entity);
+            if (user == null) return NotFound("Kullanıcı Bulunamadı");
 
-            var token = TokenOlustur(apiKullanicisi);
+            var token = GenerateToken(user);
             return Ok(token);
 
         }
 
-        private string TokenOlustur(Entity apiKullanicisi)
+        private string GenerateToken(Entity entity)
         {
             if (JwtDefaults.Key == null) throw new Exception("Key Null Olamaz");
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtDefaults.Key!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claimDizisi = new[]
+            var claim = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, apiKullanicisi.KullaniciAdi!),
-                new Claim(ClaimTypes.Role, apiKullanicisi.Rol!)
+                new Claim(ClaimTypes.NameIdentifier, entity.KullaniciAdi!),
+                new Claim(ClaimTypes.Role, entity.Rol!)
             };
 
             var expireDate = DateTime.UtcNow.AddHours(JwtDefaults.ExpireTime);
 
             var token = new JwtSecurityToken(
-               issuer : JwtDefaults.Issuer,
-               audience : JwtDefaults.Audience,
-               claims : claimDizisi,
-                expires: expireDate,
-                signingCredentials:credentials
+               issuer: JwtDefaults.Issuer,
+               audience: JwtDefaults.Audience,
+               claims: claim,
+               expires: expireDate,
+               signingCredentials: credentials
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
 
-        private Entity? KimlikDenetimiYap(Entity apiKullanicisiBilgileri)
+        private Entity? CheckUser(Entity entity)
         {
             return Users
-                .Kullanicilar
+                .userList
                 .FirstOrDefault(x =>
-                    x.KullaniciAdi?.ToLower() == apiKullanicisiBilgileri.KullaniciAdi
-                    && x.Sifre == apiKullanicisiBilgileri.Sifre
+                    x.KullaniciAdi?.ToLower() == entity.KullaniciAdi
+                    && x.Sifre == entity.Sifre
                 );
         }
     }
