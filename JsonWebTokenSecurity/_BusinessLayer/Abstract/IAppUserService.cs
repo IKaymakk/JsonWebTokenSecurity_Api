@@ -1,6 +1,6 @@
-﻿using Web_UI._EntityLayer.Concrete;
+﻿using JsonWebTokenSecurity._EntityLayer.Concrete;
 
-namespace Web_UI._BusinessLayer.Abstract
+namespace JsonWebTokenSecurity._BusinessLayer.Abstract
 {
     public interface IAppUserService : IGenericService<AppUser>
     {

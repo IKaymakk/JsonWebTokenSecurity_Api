@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Web_UI._BusinessLayer.Abstract
+namespace JsonWebTokenSecurity._BusinessLayer.Abstract
 {
     public interface IGenericService<T> where T : class
     {

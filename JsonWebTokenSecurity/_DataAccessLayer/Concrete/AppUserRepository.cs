@@ -1,7 +1,7 @@
-﻿using Web_UI._DataAccessLayer.Abstract;
-using Web_UI._EntityLayer.Concrete;
+﻿using JsonWebTokenSecurity._DataAccessLayer.Abstract;
+using JsonWebTokenSecurity._EntityLayer.Concrete;
 
-namespace Web_UI._DataAccessLayer.Concrete
+namespace JsonWebTokenSecurity._DataAccessLayer.Concrete
 {
     public class AppUserRepository:GenericRepository<AppUser>,IAppUserRepository
     {

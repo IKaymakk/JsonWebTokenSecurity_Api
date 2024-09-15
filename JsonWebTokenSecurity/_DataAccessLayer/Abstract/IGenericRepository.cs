@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Web_UI._DataAccessLayer.Abstract
+namespace JsonWebTokenSecurity._DataAccessLayer.Abstract
 {
     public interface IGenericRepository<T> where T : class
     {

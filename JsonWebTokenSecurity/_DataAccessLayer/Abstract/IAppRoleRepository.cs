@@ -1,6 +1,6 @@
-﻿using Web_UI._EntityLayer.Concrete;
+﻿using JsonWebTokenSecurity._EntityLayer.Concrete;
 
-namespace Web_UI._DataAccessLayer.Abstract
+namespace JsonWebTokenSecurity._DataAccessLayer.Abstract
 {
     public interface IAppRoleRepository:IGenericRepository<AppRole>
     {

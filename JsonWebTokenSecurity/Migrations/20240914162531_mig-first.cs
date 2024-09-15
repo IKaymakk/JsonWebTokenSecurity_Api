@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Web_UI.Migrations
+namespace JsonWebTokenSecurity.Migrations
 {
     /// <inheritdoc />
     public partial class migfirst : Migration

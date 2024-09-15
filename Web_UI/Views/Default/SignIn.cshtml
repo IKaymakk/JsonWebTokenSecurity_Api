@@ -1,0 +1,27 @@
+﻿@model LoginResultModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SignIn</title>
+</head>
+<body style="background-color:darkgray">
+
+    <div class="form-group">
+        <form method="post">
+            <input type="text" class="form-control" asp-for="Username" />
+            <br />
+            <br />
+            <input type="text" class="form-control" asp-for="Password" />
+            <button class="btn btn-outline-danger">Giriş</button>
+        </form>
+    </div>
+
+
+</body>
+</html>

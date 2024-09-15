@@ -1,6 +1,11 @@
-﻿using JsonWebTokenSecurity.Models;
+﻿using JsonWebTokenSecurity._BusinessLayer.Abstract;
+using JsonWebTokenSecurity._DataAccessLayer.Abstract;
+using JsonWebTokenSecurity._DataAccessLayer.Concrete;
+using JsonWebTokenSecurity._EntityLayer.Concrete;
+using JsonWebTokenSecurity.Models;
 using JsonWebTokenSecurity.Security;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,18 +20,49 @@ namespace JsonWebTokenSecurity.Controllers
     [ApiController]
     public class Authorization : ControllerBase
     {
-        [HttpPost]
-        public IActionResult Login([FromBody] Entity entity)
+        private readonly IAppUserService _repository;
+        private readonly IAppRoleRepository _apprepository;
+
+        public Authorization(IAppUserService repository, IAppRoleRepository apprepository)
         {
-            var user = CheckUser(entity);
-            if (user == null) return NotFound("Kullanıcı Bulunamadı");
+            _repository = repository;
+            _apprepository = apprepository;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] CheckUserDto dto)
+        {
+            var user = await CheckUser(dto);
+            if (user == null || user.IsExist == false) return NotFound("Kullanıcı Bulunamadı");
 
             var token = GenerateToken(user);
             return Ok(token);
 
         }
 
-        private string GenerateToken(Entity entity)
+        private async Task<UserDataDto> CheckUser(CheckUserDto dto)
+        {
+            UserDataDto responseDto = new();
+            var user = await _repository.GetAsync(x =>
+                    x.Username == dto.Username &&
+                        x.Password == dto.Password
+            );
+            if (user == null)
+            {
+                responseDto.IsExist = false;
+                throw new Exception("Kullanıcı Kaydı Bulunamadı");
+            }
+            else
+            {
+                responseDto.IsExist = true;
+                responseDto.Username = user.Username;
+                responseDto.Role = (await _apprepository.GetFilterAsync(x => x.AppRoleId == user.AppRoleId)).Role;
+                responseDto.AppUserId = user.AppUserId;
+            }
+            return responseDto;
+        }
+
+        private TokenResponseDto GenerateToken(UserDataDto entity)
         {
             if (JwtDefaults.Key == null) throw new Exception("Key Null Olamaz");
 
@@ -35,8 +71,8 @@ namespace JsonWebTokenSecurity.Controllers
 
             var claim = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, entity.KullaniciAdi!),
-                new Claim(ClaimTypes.Role, entity.Rol!)
+                new Claim(ClaimTypes.NameIdentifier, entity.Username!),
+                new Claim(ClaimTypes.Role, entity.Role)
             };
 
             var expireDate = DateTime.UtcNow.AddHours(JwtDefaults.ExpireTime);
@@ -49,18 +85,10 @@ namespace JsonWebTokenSecurity.Controllers
                signingCredentials: credentials
                 );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            return new TokenResponseDto(handler.WriteToken(token),expireDate);
 
         }
 
-        private Entity? CheckUser(Entity entity)
-        {
-            return Users
-                .userList
-                .FirstOrDefault(x =>
-                    x.KullaniciAdi?.ToLower() == entity.KullaniciAdi
-                    && x.Sifre == entity.Sifre
-                );
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Web_UI._EntityLayer.Concrete;
+using JsonWebTokenSecurity._EntityLayer.Concrete;
 
-namespace Web_UI._DataAccessLayer.Context
+namespace JsonWebTokenSecurity._DataAccessLayer.Context
 {
     public class SQLContext : DbContext
     {

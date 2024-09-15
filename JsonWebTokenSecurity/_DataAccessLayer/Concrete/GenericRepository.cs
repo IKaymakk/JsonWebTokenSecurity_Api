@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Web_UI._DataAccessLayer.Abstract;
-using Web_UI._DataAccessLayer.Context;
+using JsonWebTokenSecurity._DataAccessLayer.Abstract;
+using JsonWebTokenSecurity._DataAccessLayer.Context;
 
-namespace Web_UI._DataAccessLayer.Concrete;
+namespace JsonWebTokenSecurity._DataAccessLayer.Concrete;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {

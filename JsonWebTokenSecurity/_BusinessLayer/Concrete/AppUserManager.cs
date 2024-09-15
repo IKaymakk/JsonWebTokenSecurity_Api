@@ -1,9 +1,9 @@
 ﻿using System.Linq.Expressions;
-using Web_UI._BusinessLayer.Abstract;
-using Web_UI._DataAccessLayer.Abstract;
-using Web_UI._EntityLayer.Concrete;
+using JsonWebTokenSecurity._BusinessLayer.Abstract;
+using JsonWebTokenSecurity._DataAccessLayer.Abstract;
+using JsonWebTokenSecurity._EntityLayer.Concrete;
 
-namespace Web_UI._BusinessLayer.Concrete
+namespace JsonWebTokenSecurity._BusinessLayer.Concrete
 {
     public class AppUserManager : IAppUserService
     {

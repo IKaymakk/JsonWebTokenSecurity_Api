@@ -1,4 +1,4 @@
-﻿namespace Web_UI._EntityLayer.Concrete
+﻿namespace JsonWebTokenSecurity._EntityLayer.Concrete
 {
     public class AppUser
     {

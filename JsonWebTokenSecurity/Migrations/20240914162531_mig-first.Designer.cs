@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Web_UI._DataAccessLayer.Context;
+using JsonWebTokenSecurity._DataAccessLayer.Context;
 
 #nullable disable
 
-namespace Web_UI.Migrations
+namespace JsonWebTokenSecurity.Migrations
 {
     [DbContext(typeof(SQLContext))]
     [Migration("20240914162531_mig-first")]

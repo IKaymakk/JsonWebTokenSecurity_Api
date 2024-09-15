@@ -1,15 +1,25 @@
+using JsonWebTokenSecurity.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Web_UI._DataAccessLayer.Abstract;
-using Web_UI._DataAccessLayer.Concrete;
-using Web_UI._DataAccessLayer.Context;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
-
-
+builder.Services.AddHttpClient(); // IHttpClientFactory'yi ekleyin
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie(
+    JwtBearerDefaults.AuthenticationScheme, x =>
+    {
+        x.LoginPath = "/Default/SignIn";
+        x.LogoutPath = "/Login/SignOut";
+        x.AccessDeniedPath = "/Default/PageDenied";
+        x.Cookie.SameSite = SameSiteMode.Strict;
+        x.Cookie.HttpOnly = true;
+        x.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        x.Cookie.Name = "CarBookJwt";
+    });
 
 builder.Services.AddControllersWithViews();
 
@@ -27,7 +37,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
