@@ -2,6 +2,7 @@
 using JsonWebTokenSecurity._BusinessLayer.Abstract;
 using JsonWebTokenSecurity._DataAccessLayer.Abstract;
 using JsonWebTokenSecurity._EntityLayer.Concrete;
+using JsonWebTokenSecurity.Models;
 
 namespace JsonWebTokenSecurity._BusinessLayer.Concrete
 {
@@ -14,9 +15,34 @@ namespace JsonWebTokenSecurity._BusinessLayer.Concrete
             _repository = repository;
         }
 
+        public async Task<UserDataDto> CheckUser(CheckUserDto checkUserDto)
+        {
+            UserDataDto responseDto = new();
+
+            var user = await _repository.GetFilterAsync(x =>
+                    x.Username == checkUserDto.Username &&
+                        x.Password == checkUserDto.Password
+            );
+
+            if (user == null)
+            {
+                responseDto.IsExist = false;
+            }
+
+            else
+            {
+
+                responseDto.IsExist = true;
+                responseDto.Username = user.Username;
+                responseDto.Role = await _repository.GetAppUserRoleAsync(user.AppUserId);
+                responseDto.AppUserId = user.AppUserId;
+            }
+            return responseDto;
+        }
+
         public async Task DeleteAsync(AppUser t)
         {
-            var value = await _repository.GetFilterAsync(x=>x.AppUserId == t.AppUserId);
+            var value = await _repository.GetFilterAsync(x => x.AppUserId == t.AppUserId);
             await _repository.DeleteAsync(value);
         }
 

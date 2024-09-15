@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text;
 using Web_UI.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace Web_UI.Controllers
 {
@@ -19,7 +20,7 @@ namespace Web_UI.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Member")]
         public IActionResult Index()
         {
             return View();
@@ -66,6 +67,10 @@ namespace Web_UI.Controllers
                         return RedirectToAction("Index", "Default");
                     }
                 }
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                ViewBag.ErrorMessage = "Kullanıcı adıs veya şifre hatalı.";
             }
             return View();
         }
