@@ -8,12 +8,15 @@ using System.Text;
 using Web_UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using Web_UI.Validator;
+using FluentValidation.Results;
 
 namespace Web_UI.Controllers
 {
     public class DefaultController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        SignInValidator validator = new SignInValidator();
 
         public DefaultController(IHttpClientFactory httpClientFactory)
         {
@@ -37,6 +40,7 @@ namespace Web_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(LoginResultModel dto)
         {
+
             var client = _httpClientFactory.CreateClient();
             var content = new StringContent(JsonSerializer.Serialize(dto), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("https://localhost:7119/api/Authorization", content);
@@ -70,9 +74,11 @@ namespace Web_UI.Controllers
             }
             else if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                ViewBag.ErrorMessage = "Kullanıcı adıs veya şifre hatalı.";
+                ViewBag.ErrorMessage = "Kullanıcı adı veya şifre hatalı.";
             }
-            return View();
+
+            // ModelState geçerli değilse veya başka bir hata varsa View'e dön
+            return View(dto);
         }
     }
 }

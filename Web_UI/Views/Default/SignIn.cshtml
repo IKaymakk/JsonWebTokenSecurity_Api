@@ -5,16 +5,23 @@
 
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 </head>
 
 <body style="background-color:black">
+
     <div class="d-flex justify-content-center align-items-center vh-100">
         <form method="post" class="w-25">
             <div class="form-group">
-                <input type="text" class="form-control" asp-for="Username" placeholder="Kullanıcı Adı" />
+                <input type="text" class="form-control"  asp-for="Username" placeholder="Kullanıcı Adı" />
+                <span class="text-danger" asp-validation-for="Username"></span>
+
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" asp-for="Password" placeholder="Şifre" />
+                <span class="text-danger" asp-validation-for="Password"></span>
                 <br />
                 <h5 style="color:red">@ViewBag.ErrorMessage</h5>
             </div>

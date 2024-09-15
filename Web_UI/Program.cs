@@ -1,8 +1,12 @@
+using FluentValidation.AspNetCore;
 using JsonWebTokenSecurity.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
+using Web_UI.Validator;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +24,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCo
         x.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         x.Cookie.Name = "CarBookJwt";
     });
+builder.Services.AddControllersWithViews()
+        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SignInValidator>());
 
 builder.Services.AddControllersWithViews();
 
