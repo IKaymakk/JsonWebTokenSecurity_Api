@@ -2,7 +2,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Home</h1>
+
+@if (ViewBag.Data != null)
+{
+    <div>
+        <h3>API'den Alınan Veri:</h3>
+        <pre>@ViewBag.Data</pre>  <!-- Veriyi burada görüntülüyoruz -->
+    </div>
+}
+else
+{
+    <div>
+        <h3>Veri alınamadı!</h3>
+        <p>Bir hata oluştu veya API'den veri alınamadı.</p>
+    </div>
+}
+

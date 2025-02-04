@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using Web_UI.Helper;
+//using Web_UI.Middleware;
 using Web_UI.Validator;
 
 
@@ -13,12 +15,31 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpClient(); // HttpClient ekle
-builder.Services.AddSession(); // Session'ý etkinleþtir
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // HttpContext eriþimi için
-builder.Services.AddControllersWithViews()
-        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SignInValidator>());
+builder.Services.AddSession(); // Session yönetimi
+builder.Services.AddHttpContextAccessor(); // HttpContext eriþimi için
 
-builder.Services.AddControllersWithViews();
+// JWT Authentication ekle
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true, // Güvenlik için ekledim
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+        };
+    });
+
+// Authorization ekle
+builder.Services.AddAuthorization();
+
+// MVC'yi ve FluentValidation'ý ekle (Eðer kullanýyorsan)
+builder.Services.AddControllersWithViews()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SignInValidator>());
 
 var app = builder.Build();
 
@@ -26,17 +47,24 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession(); // Session'ý kullan
 app.UseRouting();
-app.UseAuthorization();
-app.UseAuthentication();
-app.MapControllerRoute(name: "default", pattern: "{controller=Auth}/{action=Login}/{id?}");
-app.Run();
+
+// Middleware sýrasý önemli!
+app.UseSession();         // Session yönetimi burada olmalý
+app.UseAuthentication();  // Kullanýcý kimlik doðrulama (JWT)
+app.UseAuthorization();   // Yetkilendirme iþlemleri
+
+// Eðer custom bir middleware kullanýyorsan (örneðin JwtMiddleware), onu burada ekle
+// app.UseMiddleware<JwtMiddleware>();
+
+// Varsayýlan route tanýmla
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Login}/{action=Login}/{id?}");
 
 app.Run();

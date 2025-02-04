@@ -36,7 +36,7 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
-            @{
+         @*    @{
                 var token = Context.Session.GetString("JWToken");
                 var roles = token != null ? JwtHelper.GetRoles(token) : new List<string>();
             }
@@ -53,7 +53,7 @@
             else
             {
                 <li><a asp-controller="Auth" asp-action="Login">Giriş Yap</a></li>
-            }
+            } *@
         </main>
     </div>
 

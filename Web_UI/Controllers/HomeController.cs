@@ -1,32 +1,45 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using Web_UI.Models;
 
-namespace Web_UI.Controllers
+namespace Web_UI.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public HomeController(IHttpClientFactory httpClientFactory)
     {
-        private readonly ILogger<HomeController> _logger;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> Index()
+    {
+        // Token'ý session'dan alýyoruz
+        var token = HttpContext.Session.GetString("AccessToken");
+
+        if (string.IsNullOrEmpty(token))
         {
-            _logger = logger;
+            // Token yoksa login sayfasýna yönlendir
+            return RedirectToAction("Login", "Login");
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //var client = _httpClientFactory.CreateClient();
+        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        //var response = await client.GetAsync("https://localhost:7119/api/Authorization/protected-data");
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    // Hatalý token ya da baþka bir sorun olabilir, 401 dönüyor olabilir
+        //    return Unauthorized();
+        //}
+
+        //var data = await response.Content.ReadAsStringAsync();
+        //ViewBag.Data = data;
+
+        return View();
     }
 }

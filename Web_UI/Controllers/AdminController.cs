@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Web_UI.Helper;
 
 namespace Web_UI.Controllers;
@@ -19,6 +20,21 @@ public class AdminController : Controller
 
         return View();
     }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminDashboard()
+    {
+        var username = HttpContext.Items["Username"];
+        var role = HttpContext.Items["Role"];
+
+        if (role?.ToString() == "Admin")
+        {
+            return View();
+        }
+
+        return Unauthorized();
+    }
+
 
     public IActionResult AccessDenied()
     {

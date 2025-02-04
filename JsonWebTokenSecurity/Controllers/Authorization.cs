@@ -4,6 +4,7 @@ using JsonWebTokenSecurity._DataAccessLayer.Concrete;
 using JsonWebTokenSecurity._EntityLayer.Concrete;
 using JsonWebTokenSecurity.Models;
 using JsonWebTokenSecurity.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,12 @@ namespace JsonWebTokenSecurity.Controllers
             return Ok(token);
 
         }
-
+        [Authorize]
+        [HttpGet("protected-data")]
+        public IActionResult GetProtectedData()
+        {
+            // Authenticated user can access this
+            return Ok("This is a protected data");
+        }
     }
 }
