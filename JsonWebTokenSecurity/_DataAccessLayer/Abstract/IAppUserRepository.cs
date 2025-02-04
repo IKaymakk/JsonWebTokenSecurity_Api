@@ -1,5 +1,4 @@
 ﻿using JsonWebTokenSecurity._EntityLayer.Concrete;
-using JsonWebTokenSecurity.Models.AppUserManagerDtos;
 
 namespace JsonWebTokenSecurity._DataAccessLayer.Abstract
 {

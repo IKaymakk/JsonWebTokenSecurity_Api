@@ -12,18 +12,9 @@ using Web_UI.Validator;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddHttpClient(); // IHttpClientFactory'yi ekleyin
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie(
-    JwtBearerDefaults.AuthenticationScheme, x =>
-    {
-        x.LoginPath = "/Default/SignIn";
-        x.LogoutPath = "/Login/SignOut";
-        x.AccessDeniedPath = "/Default/PageDenied";
-        x.Cookie.SameSite = SameSiteMode.Strict;
-        x.Cookie.HttpOnly = true;
-        x.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-        x.Cookie.Name = "CarBookJwt";
-    });
+builder.Services.AddHttpClient(); // HttpClient ekle
+builder.Services.AddSession(); // Session'ý etkinleþtir
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // HttpContext eriþimi için
 builder.Services.AddControllersWithViews()
         .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SignInValidator>());
 
@@ -41,13 +32,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession(); // Session'ý kullan
 app.UseRouting();
-app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseAuthentication();
+app.MapControllerRoute(name: "default", pattern: "{controller=Auth}/{action=Login}/{id?}");
+app.Run();
 
 app.Run();

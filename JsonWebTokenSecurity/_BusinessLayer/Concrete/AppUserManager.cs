@@ -31,7 +31,6 @@ namespace JsonWebTokenSecurity._BusinessLayer.Concrete
 
             else
             {
-
                 responseDto.IsExist = true;
                 responseDto.Username = user.Username;
                 responseDto.Role = await _repository.GetAppUserRoleAsync(user.AppUserId);

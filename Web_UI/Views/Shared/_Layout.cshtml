@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Web_UI.Helper
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +10,8 @@
     <link rel="stylesheet" href="~/Web_UI.styles.css" asp-append-version="true" />
 </head>
 <body>
+ 
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -33,6 +36,24 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+            @{
+                var token = Context.Session.GetString("JWToken");
+                var roles = token != null ? JwtHelper.GetRoles(token) : new List<string>();
+            }
+
+            @if (roles.Contains("Admin"))
+            {
+                <li><a asp-controller="Admin" asp-action="Index">Admin Panel</a></li>
+            }
+
+            @if (token != null)
+            {
+                <li><a asp-controller="Auth" asp-action="Logout">Çıkış Yap</a></li>
+            }
+            else
+            {
+                <li><a asp-controller="Auth" asp-action="Login">Giriş Yap</a></li>
+            }
         </main>
     </div>
 

@@ -23,7 +23,7 @@ namespace Web_UI.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [Authorize(Roles = "Member")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();
@@ -72,12 +72,10 @@ namespace Web_UI.Controllers
                     }
                 }
             }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
+            else
             {
                 ViewBag.ErrorMessage = "Kullanıcı adı veya şifre hatalı.";
             }
-
-            // ModelState geçerli değilse veya başka bir hata varsa View'e dön
             return View(dto);
         }
     }

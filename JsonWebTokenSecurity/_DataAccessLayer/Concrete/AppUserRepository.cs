@@ -1,7 +1,6 @@
 ﻿using JsonWebTokenSecurity._DataAccessLayer.Abstract;
 using JsonWebTokenSecurity._DataAccessLayer.Context;
 using JsonWebTokenSecurity._EntityLayer.Concrete;
-using JsonWebTokenSecurity.Models.AppUserManagerDtos;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 
