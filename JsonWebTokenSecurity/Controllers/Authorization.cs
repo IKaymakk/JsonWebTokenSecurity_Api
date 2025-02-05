@@ -41,6 +41,7 @@ namespace JsonWebTokenSecurity.Controllers
             return Ok(token);
 
         }
+
         [Authorize]
         [HttpGet("protected-data")]
         public IActionResult GetProtectedData()
@@ -48,5 +49,13 @@ namespace JsonWebTokenSecurity.Controllers
             // Authenticated user can access this
             return Ok("This is a protected data");
         }
+
+        [Authorize]
+        [HttpPost("protected-data-post")]
+        public IActionResult PostProtectedData([FromBody] string obj)
+        {
+            return Ok(obj); // Gönderilen objeyi döndürüyoruz
+        }
+
     }
 }

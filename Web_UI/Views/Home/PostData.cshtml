@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "PostData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>API'ye Veri Gönder</h2>
+
+<form method="post" asp-action="PostData">
+    <div class="form-group">
+        <label for="obj">Veri Girin:</label>
+        <input type="text" class="form-control" id="obj" name="obj" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>
+
+@if (ViewBag.Response != null)
+{
+    <div class="alert alert-success mt-3">
+        API'den Gelen Yanıt: @ViewBag.Response
+    </div>
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger mt-3">
+        Hata: @ViewBag.Error
+    </div>
+}
+

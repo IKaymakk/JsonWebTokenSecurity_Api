@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
 using System.Text;
 using Web_UI.Helper;
-//using Web_UI.Middleware;
 using Web_UI.Validator;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient(); // HttpClient ekle
 builder.Services.AddSession(); // Session yönetimi
 builder.Services.AddHttpContextAccessor(); // HttpContext eriþimi için
+builder.Services.AddScoped<ApiService>();  // ApiService'i ekliyoruz
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // JWT Authentication ekle
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -37,9 +36,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Authorization ekle
 builder.Services.AddAuthorization();
 
-// MVC'yi ve FluentValidation'ý ekle (Eðer kullanýyorsan)
-builder.Services.AddControllersWithViews()
-    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SignInValidator>());
+// MVC'yi ve FluentValidation'ý ekle
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.AddService<TokenValidationActionFilter>();  // Filtreyi ekliyoruz
+})
+.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<SignInValidator>());
 
 var app = builder.Build();
 
@@ -58,9 +60,6 @@ app.UseRouting();
 app.UseSession();         // Session yönetimi burada olmalý
 app.UseAuthentication();  // Kullanýcý kimlik doðrulama (JWT)
 app.UseAuthorization();   // Yetkilendirme iþlemleri
-
-// Eðer custom bir middleware kullanýyorsan (örneðin JwtMiddleware), onu burada ekle
-// app.UseMiddleware<JwtMiddleware>();
 
 // Varsayýlan route tanýmla
 app.MapControllerRoute(
